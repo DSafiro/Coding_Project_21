@@ -7,24 +7,24 @@ const App = () => {
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState(null); // State to store any error messages
 
-  useEffect(() => {
-    const fetchTours = async () => {
-      setLoading(true); // Set loading to true before fetching data
-      setError(null); // Reset error state before fetching data
-      try {
-        const response = await fetch('https://course-api.com/react-tours-project'); // Fetch tours data from the API
-        if (!response.ok) {
-          throw new Error('Failed to fetch tours'); // Throw an error if the response is not ok
-        }
-        const data = await response.json(); // Parse the JSON response
-        setTours(data); // Update the tours state with the fetched data
-      } catch (err) {
-        setError(err.message); // Set the error state if an error occurs
-      } finally {
-        setLoading(false); // Set loading to false after fetching is complete
+  const fetchTours = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    setError(null); // Reset error state before fetching data
+    try {
+      const response = await fetch("https://api.allorigins.win/raw?url=https://course-api.com/react-tours-project"); // Fetch tours data from the API
+      if (!response.ok) {
+        throw new Error('Failed to fetch tours'); // Throw an error if the response is not ok
       }
-    };
+      const data = await response.json(); // Parse the JSON response
+      setTours(data); // Update the tours state with the fetched data
+    } catch (err) {
+      setError(err.message); // Set the error state if an error occurs
+    } finally {
+      setLoading(false); // Set loading to false after fetching is complete
+    }
+  };
 
+  useEffect(() => {
     fetchTours(); // Call the fetchTours function when the component mounts
   }, []); // Empty dependency array ensures this runs only once
 
@@ -34,6 +34,15 @@ const App = () => {
 
   if (loading) return <h1>Loading...</h1>; // Display loading message while data is being fetched
   if (error) return <h1>Error: {error}</h1>; // Display error message if an error occurs
+
+  if (tours.length === 0) {
+    return (
+      <div>
+        <h1>No Tours Left</h1>
+        <button onClick={fetchTours}>Refresh</button>
+      </div>
+    );
+  }
 
   return (
     <div>
